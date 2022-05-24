@@ -1,0 +1,37 @@
+<p>Select source file</p>
+<label for="chooseFile">Choose file</label>
+<Input
+  @type="file"
+  id="chooseFile"
+  @value="Choose file"
+  accept=".json,.mid,.xml"
+  {{on "change" this.updateSourceFile}}
+/>
+{{#if this.sourceFile}}
+  <p>You have selected
+    {{this.sourceFile.name}}
+    as your source file.</p>
+{{/if}}
+<p>Select target file format</p>
+<label for="target">Select target file format:</label>
+<PowerSelect
+  @options={{this.targetFormats}}
+  @selected={{this.targetFormat}}
+  id="target"
+  @onChange={{set this "targetFormat"}}
+  as |targetFormat|
+> {{targetFormat}} </PowerSelect>
+<p>You have selected {{this.targetFormat}} as your target file.</p>
+<button
+  type="button"
+  disabled={{this.isConvertButtonDisabled}}
+  {{on "click" this.convertFile}}
+>Convert</button>
+<div id="err">
+</div>
+<div id="err2">
+</div>
+{{#if this.convertedFile}}
+<p>{{this.convertedFile.name}} is ready for download.</p>
+  <a href={{this.convertedFile.name}} download={{this.convertedFile.name}}>Download {{this.convertedFile.name}}</a>
+{{/if}}
