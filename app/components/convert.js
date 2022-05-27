@@ -1,20 +1,17 @@
 const defaultOption = "Choose one";
 
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import {
   readFile,
   saveFile,
   getFileExtension,
   getFileNameWithoutExtension,
-} from '../utils/file-utils';
-import {
-  xmlToJson,
-  jsonToXml,
-} from '../utils/conversion-utils';
-import { SUPPORTED_FILE_TYPES as supportedTypes } from '../utils/constants';
- 
+} from "../utils/file-utils";
+import { xmlToJson, jsonToXml } from "../utils/conversion-utils";
+import { SUPPORTED_FILE_TYPES as supportedTypes } from "../utils/constants";
+
 export default class ConvertComponent extends Component {
   sourceFormats = supportedTypes;
   targetFormats = supportedTypes;
@@ -26,6 +23,10 @@ export default class ConvertComponent extends Component {
 
   get isConvertButtonDisabled() {
     return !this.sourceFile || this.args.target === defaultOption;
+  }
+
+  get isResetButtonDisabled() {
+    return !this.sourceFile || this.targetFormat != defaultOption;
   }
 
   @action
@@ -40,22 +41,33 @@ export default class ConvertComponent extends Component {
   async convertFile() {
     let sourceData = await readFile(this.sourceFile);
     let sourceFormat = getFileExtension(this.sourceFile.name);
-    let targetFileName = getFileNameWithoutExtension(this.sourceFile.name).concat(
-      this.targetFormat
-    );
+    let targetFileName = getFileNameWithoutExtension(
+      this.sourceFile.name
+    ).concat(this.targetFormat);
     let convertedData, destinationFile;
     if (sourceFormat == this.targetFormat) {
       this.convertedFile = await saveFile(sourceData, targetFileName);
+      return;
     }
-  if (sourceFormat === 'xml') {
-    if (targetFormat === 'json') {
-      convertedData = xmlToJson(sourceData);
+    if (sourceFormat === "xml") {
+      if (this.targetFormat === "json") {
+        convertedData = xmlToJson(sourceData);
+      }
+    } else if (sourceFormat === "json") {
+      if (this.targetFormat === "xml") {
+        convertedData = jsonToXml(sourceData);
+      }
     }
-  } else if (sourceFormat === 'json') {
-    if (targetFormat === 'xml') {
-      convertedData = xmlToJson(sourceData);
+    if (!convertedData) {
+      return;
     }
-  }
     this.convertedFile = saveFile(convertedData, targetFileName);
+  }
+
+  @action
+  reset() {
+    this.sourceFile = undefined;
+    this.targetFormat = defaultOption;
+    this.convertedFile = undefined;
   }
 }

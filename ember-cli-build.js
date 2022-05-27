@@ -7,6 +7,16 @@ module.exports = function(defaults) {
     'ember-bootstrap': {
       bootstrapVersion: 5,
       importBootstrapCSS: true
+    },
+    autoImport: {
+      webpack: {
+        resolve: {
+          fallback: {
+            path: false,
+            url: false
+          }
+        }
+      }
     }
   });
 

@@ -1,9 +1,9 @@
-import { parseScore, serializeScore as MusicXML } from 'musicxml-interfaces';
- 
+import * as MusicXML from "musicxml-interfaces";
+
 export function xmlToJson(xmlData) {
-    return parseScore(xmlData);
+  return MusicXML.parseScore(xmlData);
 }
 
 export function jsonToXml(jsonData) {
-    return serializeScore(jsonData);
+  return MusicXML.serializeScore(jsonData);
 }

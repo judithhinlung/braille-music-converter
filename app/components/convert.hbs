@@ -21,12 +21,17 @@
   @onChange={{set this "targetFormat"}}
   as |targetFormat|
 > {{targetFormat}} </PowerSelect>
-<p>You have selected {{this.targetFormat}} as your target file.</p>
+<p>You have selected {{this.targetFormat}} as your target file format.</p>
 <button
   type="button"
   disabled={{this.isConvertButtonDisabled}}
   {{on "click" this.convertFile}}
 >Convert</button>
+<button
+  type="button"
+  disabled={{this.isResetButtonDisabled}}
+  {{on "click" this.reset}}
+>Reset</button>
 <div id="err">
 </div>
 <div id="err2">
