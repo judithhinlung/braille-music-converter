@@ -1,3 +1,4 @@
+<h2>Convert a file</h2>
 <p>Select source file</p>
 <label for="chooseFile">Choose file</label>
 <Input
@@ -37,6 +38,11 @@
 <div id="err2">
 </div>
 {{#if this.convertedFile}}
+<h2>Result of conversion</h2>
+<label for="conversionResult">Result</label>
+<textarea id="conversionResult" name="conversionResult" rows="4" cols="50">
+{{this.conversionResult}}
+</textarea>
 <p>{{this.convertedFile.name}} is ready for download.</p>
-  <a href={{this.convertedFile.name}} download={{this.convertedFile.name}}>Download {{this.convertedFile.name}}</a>
+  <a href={{this.convertedFileUrl}} download={{this.convertedFile.name}}>Download {{this.convertedFile.name}}</a>
 {{/if}}

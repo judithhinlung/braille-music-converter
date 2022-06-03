@@ -1,7 +1,7 @@
 import * as MusicXML from "musicxml-interfaces";
 
 export function xmlToJson(xmlData) {
-  return MusicXML.parseScore(xmlData);
+  return JSON.stringify(MusicXML.parseScore(xmlData), undefined, 2);
 }
 
 export function jsonToXml(jsonData) {

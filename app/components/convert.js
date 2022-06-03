@@ -17,16 +17,20 @@ export default class ConvertComponent extends Component {
   targetFormats = supportedTypes;
   @tracked
   sourceFile;
+  @tracked
   targetFormat = defaultOption;
   @tracked
   convertedFile;
+  convertedFileUrl;
+  @tracked
+  conversionResult;
 
   get isConvertButtonDisabled() {
     return !this.sourceFile || this.args.target === defaultOption;
   }
 
   get isResetButtonDisabled() {
-    return !this.sourceFile || this.targetFormat != defaultOption;
+    return !this.sourceFile || this.targetFormat == defaultOption;
   }
 
   @action
@@ -46,8 +50,7 @@ export default class ConvertComponent extends Component {
     ).concat(this.targetFormat);
     let convertedData, destinationFile;
     if (sourceFormat == this.targetFormat) {
-      this.convertedFile = await saveFile(sourceData, targetFileName);
-      return;
+      convertedData = sourceData;
     }
     if (sourceFormat === "xml") {
       if (this.targetFormat === "json") {
@@ -61,7 +64,9 @@ export default class ConvertComponent extends Component {
     if (!convertedData) {
       return;
     }
+    this.conversionResult = convertedData;
     this.convertedFile = saveFile(convertedData, targetFileName);
+    this.convertedFileUrl = URL.createObjectURL(this.convertedFile);
   }
 
   @action
@@ -69,5 +74,10 @@ export default class ConvertComponent extends Component {
     this.sourceFile = undefined;
     this.targetFormat = defaultOption;
     this.convertedFile = undefined;
+    this.conversionResult = undefined;
+    if (this.convertedFileUrl) {
+      URL.revokeObjectURL(this.convertedFileUrl);
+      this.convertedUrl = undefined;
+    }
   }
 }
